@@ -10,3 +10,4 @@ __pycache__/
 .env
 venv/
 env/
+dbt_internal_packages/
