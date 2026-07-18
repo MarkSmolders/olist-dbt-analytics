@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: stg_olist__customers
+    description: "Staging model for the Olist customers table. One row per order-customer relationship. Note that the same physical customer will have a different customer_id per order — use customer_unique_id to identify returning customers."
+    columns:
+      - name: customer_id
+        description: "Unique identifier for each order-customer relationship. Primary key of this model."
+        tests:
+          - unique
+          - not_null
+      - name: customer_unique_id
+        description: "Unique identifier for the physical customer across all orders. Use this to identify returning customers."
+      - name: customer_zip_code_prefix
+        description: "First five digits of the customer zip code. Can be used to join to the geolocation table for geographic analysis."
+      - name: customer_city
+        description: "Name of the city where the customer is located."
+      - name: customer_state
+        description: "Two-letter abbreviation of the Brazilian state where the customer is located."
