@@ -17,6 +17,7 @@ models:
         description: "Name of the city where the customer is located."
       - name: customer_state
         description: "Two-letter abbreviation of the Brazilian state where the customer is located."
+
   - name: stg_olist__order_items
     description: "Staging model for order items. One row per item within an order. The combination of order_id and order_item_id forms the primary key."
     columns:
@@ -46,3 +47,28 @@ models:
         description: "Item price in Brazilian Real (BRL)."
       - name: freight_value
         description: "Freight cost for this item in Brazilian Real (BRL)."
+    
+  - name: stg_olist__products
+    description: "Staging model for products. One row per product. Primary key is product_id. Note that product_category_name is in Portuguese and will be translated to English in the mart layer."
+    columns:
+      - name: product_id
+        description: "Unique identifier for each product. Primary key of this model."
+        tests:
+          - not_null
+          - unique
+      - name: product_category_name
+        description: "Product category name in Portuguese. Joined to the category translation table in the mart layer to produce English category names."
+      - name: product_name_length
+        description: "Character length of the product name. Renamed from product_name_lenght to correct the typo in the source data."
+      - name: product_description_length
+        description: "Character length of the product description. Renamed from product_description_lenght to correct the typo in the source data."
+      - name: product_photos_qty
+        description: "Number of product photos published by the seller."
+      - name: product_weight_g
+        description: "Product weight in grams."
+      - name: product_length_cm
+        description: "Product length in centimetres."
+      - name: product_height_cm
+        description: "Product height in centimetres."
+      - name: product_width_cm
+        description: "Product width in centimetres."
