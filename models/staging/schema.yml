@@ -17,7 +17,7 @@ models:
         description: "Name of the city where the customer is located."
       - name: customer_state
         description: "Two-letter abbreviation of the Brazilian state where the customer is located."
-    - name: stg_olist__order_items
+  - name: stg_olist__order_items
     description: "Staging model for order items. One row per item within an order. The combination of order_id and order_item_id forms the primary key."
     columns:
       - name: order_id
