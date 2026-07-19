@@ -25,8 +25,9 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('stg_olist__orders')
-              field: order_id
+              arguments:
+                to: ref('stg_olist__orders')
+                field: order_id
       - name: order_item_id
         description: "Sequential item number within an order. Starts at 1 for each order."
         tests:
