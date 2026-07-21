@@ -88,3 +88,56 @@ models:
         description: "City name associated with the zip code prefix."
       - name: geolocation_state
         description: "Two-letter Brazilian state abbreviation associated with the zip code prefix."
+
+  - name: stg_olist__orders
+    description: "Staging model for orders. One row per order. Primary key is order_id. Contains order status and all relevant timestamps across the order lifecycle."
+    columns:
+      - name: order_id
+        description: "Unique identifier for each order. Primary key of this model."
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Foreign key to stg_olist__customers. Identifies the customer who placed the order."
+        tests:
+          - not_null 
+          - relationships:
+              arguments:
+                to: ref('stg_olist__customers')
+                field: customer_id
+      - name: order_status
+        description: "Current status of the order. Possible values include delivered, shipped, canceled, unavailable, invoiced, processing, created, and approved."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['delivered', 'shipped', 'canceled', 'unavailable', 'invoiced', 'processing', 'created', 'approved']
+      - name: order_purchase_timestamp
+        description: "Timestamp when the order was placed by the customer."
+        tests:
+          - data_type:
+              arguments:
+                data_type: TIMESTAMP
+      - name: order_approved_at
+        description: "Timestamp when the payment for the order was approved."
+        tests:
+          - data_type:
+              arguments:
+                data_type: TIMESTAMP
+      - name: order_delivered_carrier_date
+        description: "Timestamp when the order was handed to the logistics carrier."
+        tests:
+          - data_type:
+              arguments:
+                data_type: TIMESTAMP
+      - name: order_delivered_customer_date
+        description: "Timestamp when the order was delivered to the customer."
+        tests:
+          - data_type:
+              arguments:
+                data_type: TIMESTAMP
+      - name: order_estimated_delivery_date
+        description: "Estimated delivery date communicated to the customer at time of purchase."
+        tests:
+          - data_type:
+              arguments:
+                data_type: TIMESTAMP
