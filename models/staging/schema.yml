@@ -72,3 +72,19 @@ models:
         description: "Product height in centimetres."
       - name: product_width_cm
         description: "Product width in centimetres."
+
+  - name: stg_olist__geolocation
+    description: "Staging model for Brazilian zip code geolocation data. This table has no true primary key — multiple coordinate pairs can exist for the same zip code prefix. Deduplication keeps one representative coordinate per zip code prefix. Use geolocation_zip_code_prefix to join to customer and seller tables."
+    columns:
+      - name: geolocation_zip_code_prefix
+        description: "First five digits of a Brazilian zip code. Used as the join key to customer and seller tables. Not unique — multiple coordinates can exist per prefix, deduplicated to one row per prefix in this model."
+        tests: 
+          - not_null
+      - name: geolocation_lat
+        description: "Latitude coordinate for the zip code area."
+      - name: geolocation_lng
+        description: "Longitude coordinate for the zip code area."
+      - name: geolocation_city
+        description: "City name associated with the zip code prefix."
+      - name: geolocation_state
+        description: "Two-letter Brazilian state abbreviation associated with the zip code prefix."
