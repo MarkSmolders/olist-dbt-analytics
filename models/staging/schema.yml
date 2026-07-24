@@ -49,6 +49,10 @@ models:
           - not_null
       - name: shipping_limit_date
         description: "Date by which the seller must ship the item to meet the estimated delivery date."
+        tests:
+          - data_type:
+              arguments:
+                data_type: TIMESTAMP
       - name: price
         description: "Item price in Brazilian Real (BRL)."
       - name: freight_value
