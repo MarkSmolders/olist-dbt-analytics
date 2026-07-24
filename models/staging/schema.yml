@@ -1,5 +1,8 @@
 version: 2
 
+# -------------------------------------------------------
+# Staging model: stg_olist__customers
+# -------------------------------------------------------
 models:
   - name: stg_olist__customers
     description: "Staging model for the Olist customers table. One row per order-customer relationship. Note that the same physical customer will have a different customer_id per order — use customer_unique_id to identify returning customers."
@@ -18,6 +21,9 @@ models:
       - name: customer_state
         description: "Two-letter abbreviation of the Brazilian state where the customer is located."
 
+# -------------------------------------------------------
+# Staging model: stg_olist__order_items
+# -------------------------------------------------------
   - name: stg_olist__order_items
     description: "Staging model for order items. One row per item within an order. The combination of order_id and order_item_id forms the primary key."
     columns:
@@ -47,7 +53,10 @@ models:
         description: "Item price in Brazilian Real (BRL)."
       - name: freight_value
         description: "Freight cost for this item in Brazilian Real (BRL)."
-    
+
+# -------------------------------------------------------
+# Staging model: stg_olist__products
+# -------------------------------------------------------
   - name: stg_olist__products
     description: "Staging model for products. One row per product. Primary key is product_id. Note that product_category_name is in Portuguese and will be translated to English in the mart layer."
     columns:
@@ -73,6 +82,9 @@ models:
       - name: product_width_cm
         description: "Product width in centimetres."
 
+# -------------------------------------------------------
+# Staging model: stg_olist__geolocation
+# -------------------------------------------------------
   - name: stg_olist__geolocation
     description: "Staging model for Brazilian zip code geolocation data. This table has no true primary key — multiple coordinate pairs can exist for the same zip code prefix. Deduplication keeps one representative coordinate per zip code prefix. Use geolocation_zip_code_prefix to join to customer and seller tables."
     columns:
@@ -89,6 +101,9 @@ models:
       - name: geolocation_state
         description: "Two-letter Brazilian state abbreviation associated with the zip code prefix."
 
+# -------------------------------------------------------
+# Staging model: stg_olist__orders
+# -------------------------------------------------------
   - name: stg_olist__orders
     description: "Staging model for orders. One row per order. Primary key is order_id. Contains order status and all relevant timestamps across the order lifecycle."
     columns:
@@ -142,6 +157,9 @@ models:
               arguments:
                 data_type: TIMESTAMP
 
+# -------------------------------------------------------
+# Staging model: stg_olist__order_payments
+# -------------------------------------------------------
   - name: stg_olist__order_payments
     description: "Staging model for order payments. One row per payment per order. A single order can have multiple payment methods, identified by payment_sequential. The combination of order_id and payment_sequential forms the primary key."
     columns:
