@@ -55,8 +55,12 @@ models:
                 data_type: TIMESTAMP
       - name: price
         description: "Item price in Brazilian Real (BRL)."
+        tests:
+          - not_null
       - name: freight_value
         description: "Freight cost for this item in Brazilian Real (BRL)."
+        tests:
+          - not_null
 
 # -------------------------------------------------------
 # Staging model: stg_olist__products
