@@ -193,4 +193,47 @@ models:
         description: "Transaction value for this payment in Brazilian Real (BRL). Cast from STRING to NUMERIC in staging."
         tests:
           - not_negative
-    
+  
+# -------------------------------------------------------
+# Staging model: stg_olist__order_reviews
+# -------------------------------------------------------
+  - name: stg_olist__order_reviews
+    description: "Staging model for order reviews. One row per review. Primary key is review_id. Contains customer review scores and optional comment text submitted after order delivery."
+    columns:
+      - name: review_id
+        description: "Unique identifier for each review. Primary key of this model."
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: "Foreign key to stg_olist__orders. Identifies which order this review belongs to."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_olist__orders')
+                field: order_id
+      - name: review_score
+        description: "Customer satisfaction score between 1 and 5. Cast from STRING to INT64 in staging."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5]
+                quote: false
+      - name: review_comment_title
+        description: "Optional title of the customer review comment. May be null if the customer did not provide a title."
+      - name: review_comment_message
+        description: "Optional body text of the customer review. May be null if the customer did not leave a written comment."
+      - name: review_creation_date
+        description: "Timestamp when the review form was sent to the customer. Cast from STRING to TIMESTAMP in staging."
+        tests:
+          - data_type:
+              arguments:
+                data_type: TIMESTAMP
+      - name: review_answer_timestamp
+        description: "Timestamp when the customer submitted the review. Cast from STRING to TIMESTAMP in staging."
+        tests:
+          - data_type:
+              arguments:
+                data_type: TIMESTAMP
