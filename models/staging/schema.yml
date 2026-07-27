@@ -57,10 +57,12 @@ models:
         description: "Item price in Brazilian Real (BRL)."
         tests:
           - not_null
+          - not_negative
       - name: freight_value
         description: "Freight cost for this item in Brazilian Real (BRL)."
         tests:
           - not_null
+          - not_negative
 
 # -------------------------------------------------------
 # Staging model: stg_olist__products
@@ -185,6 +187,10 @@ models:
         description: "Payment method used. Possible values include credit_card, boleto, voucher, and debit_card."
       - name: payment_installments
         description: "Number of installments chosen by the customer for credit card payments. Cast from STRING to INT64 in staging."
+        tests:
+          - not_negative
       - name: payment_value
         description: "Transaction value for this payment in Brazilian Real (BRL). Cast from STRING to NUMERIC in staging."
+        tests:
+          - not_negative
     
