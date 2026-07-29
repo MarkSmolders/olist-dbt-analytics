@@ -77,6 +77,14 @@ models:
           - unique
       - name: product_category_name
         description: "Product category name in Portuguese. Joined to the category translation table in the mart layer to produce English category names."
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_olist__product_category_name_translation')
+                field: product_category_name
+              config:
+                where: "product_category_name is not null"
+                severity: warn
       - name: product_name_length
         description: "Character length of the product name. Renamed from product_name_lenght to correct the typo in the source data."
       - name: product_description_length
@@ -237,3 +245,17 @@ models:
           - data_type:
               arguments:
                 data_type: TIMESTAMP
+
+# -------------------------------------------------------
+# Staging model: stg_olist__product_category_name_translation
+# -------------------------------------------------------
+  - name: stg_olist__product_category_name_translation
+    description: "Staging model for product category name translations. One row per category. Maps Portuguese category names to English equivalents. Used in mart models to translate product categories."
+    columns:
+      - name: product_category_name
+        description: "Product category name in Portuguese. Primary key of this model. Foreign key to stg_olist__products."
+        tests:
+          - unique
+          - not_null
+      - name: product_category_name_english
+        description: "English translation of the product category name."
