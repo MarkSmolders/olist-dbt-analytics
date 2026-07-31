@@ -1,0 +1,31 @@
+# -------------------------------------------------------
+# Mart model: dim_products
+# -------------------------------------------------------
+  - name: dim_products
+    description: "Product dimension table. One row per product with English category names. Used to enrich fact tables with product attributes and enable category-level analysis."
+    columns:
+      - name: product_id
+        description: "Unique identifier for each product. Primary key of this model."
+        tests:
+          - unique
+          - not_null
+      - name: product_category_name_english
+        description: "English translation of the product category name. Null for two categories missing from the translation table — pc_gamer and portateis_cozinha_e_preparadores_de_alimentos."
+        tests:
+          - not_null:
+              config:
+                severity: warn
+      - name: product_name_length
+        description: "Character length of the product name."
+      - name: product_description_length
+        description: "Character length of the product description."
+      - name: product_photos_qty
+        description: "Number of product photos published by the seller."
+      - name: product_weight_g
+        description: "Product weight in grams."
+      - name: product_length_cm
+        description: "Product length in centimetres."
+      - name: product_height_cm
+        description: "Product height in centimetres."
+      - name: product_width_cm
+        description: "Product width in centimetres."
