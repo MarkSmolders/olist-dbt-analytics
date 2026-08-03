@@ -50,3 +50,23 @@ models:
         description: "City where the seller is located."
       - name: seller_state
         description: "Two-letter Brazilian state abbreviation where the seller is located."
+
+# -------------------------------------------------------
+# Mart model: dim_customers
+# -------------------------------------------------------
+  - name: dim_customers
+    description: "Customer dimension table. One row per order-customer relationship. Note that the same physical customer will have a different customer_id per order — use customer_unique_id to identify returning customers."
+    columns:
+      - name: customer_id
+        description: "Unique identifier for each order-customer relationship. Primary key of this model."
+        tests:
+          - unique
+          - not_null
+      - name: customer_unique_id
+        description: "Unique identifier for the physical customer across all orders. Use this to identify returning customers."
+      - name: customer_zip_code_prefix
+        description: "First five digits of the customer zip code."
+      - name: customer_city
+        description: "City where the customer is located."
+      - name: customer_state
+        description: "Two-letter Brazilian state abbreviation where the customer is located."
