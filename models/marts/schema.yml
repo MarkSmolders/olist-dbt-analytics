@@ -70,3 +70,39 @@ models:
         description: "City where the customer is located."
       - name: customer_state
         description: "Two-letter Brazilian state abbreviation where the customer is located."
+
+# -------------------------------------------------------
+# Fact model: fct_orders
+# -------------------------------------------------------
+  - name: fct_orders
+    description: "Fact table for orders. One row per order. Contains order status and lifecycle timestamps. Join to dim_customers for customer attributes, fct_order_items for revenue, and fct_order_payments for payment details."
+    columns:
+      - name: order_id
+        description: "Unique identifier for each order. Primary key of this model."
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Foreign key to dim_customers."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+      - name: order_status
+        description: "Current status of the order."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['delivered', 'shipped', 'canceled', 'unavailable', 'invoiced', 'processing', 'created', 'approved']
+      - name: order_purchase_timestamp
+        description: "Timestamp when the order was placed."
+      - name: order_approved_at
+        description: "Timestamp when the payment was approved."
+      - name: order_delivered_carrier_date
+        description: "Timestamp when the order was handed to the carrier."
+      - name: order_delivered_customer_date
+        description: "Timestamp when the order was delivered to the customer."
+      - name: order_estimated_delivery_date
+        description: "Estimated delivery date communicated to the customer."
