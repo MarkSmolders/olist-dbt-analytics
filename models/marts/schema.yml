@@ -134,3 +134,39 @@ models:
         tests:
           - not_null
           - not_negative
+
+# -------------------------------------------------------
+# Fact model: fct_order_reviews
+# -------------------------------------------------------
+  - name: fct_order_reviews
+    description: "Fact table for order reviews. One row per review. Contains customer satisfaction scores and optional written feedback submitted after order delivery."
+    columns:
+      - name: review_id
+        description: "Unique identifier for each review. Primary key of this model."
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: "Foreign key to fct_orders."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_orders')
+                field: order_id
+      - name: review_score
+        description: "Customer satisfaction score between 1 and 5."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5]
+                quote: false
+      - name: review_comment_title
+        description: "Optional title of the customer review. May be null."
+      - name: review_comment_message
+        description: "Optional body text of the customer review. May be null."
+      - name: review_creation_date
+        description: "Timestamp when the review form was sent to the customer."
+      - name: review_answer_timestamp
+        description: "Timestamp when the customer submitted the review."
