@@ -32,3 +32,21 @@ models:
         description: "Product height in centimetres."
       - name: product_width_cm
         description: "Product width in centimetres."
+
+# -------------------------------------------------------
+# Mart model: dim_sellers
+# -------------------------------------------------------
+  - name: dim_sellers
+    description: "Seller dimension table. One row per seller. Contains seller location attributes used for geographic analysis and joining to order items."
+    columns:
+      - name: seller_id
+        description: "Unique identifier for each seller. Primary key of this model."
+        tests:
+          - unique
+          - not_null
+      - name: seller_zip_code_prefix
+        description: "First five digits of the seller zip code."
+      - name: seller_city
+        description: "City where the seller is located."
+      - name: seller_state
+        description: "Two-letter Brazilian state abbreviation where the seller is located."
