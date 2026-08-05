@@ -1,0 +1,45 @@
+version: 2
+
+models:
+# -------------------------------------------------------
+# Analytical Mart: delivery_performance
+# -------------------------------------------------------
+  - name: delivery_performance
+    description: "Analytical mart for delivery performance analysis. One row per order. Contains calculated time differences across the order lifecycle to measure fulfilment speed, carrier delivery time, and delivery accuracy against estimates. Joined with customer location for geographic analysis."
+    columns:
+      - name: order_id
+        description: "Unique identifier for each order. Primary key of this model."
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Foreign key to dim_customers."
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+      - name: order_status
+        description: "Current status of the order."
+      - name: order_purchase_timestamp
+        description: "Timestamp when the order was placed."
+      - name: approval_time_minutes
+        description: "Time in minutes between order purchase and payment approval. Null if order was never approved."
+      - name: order_approved_at
+        description: "Timestamp when the payment was approved."
+      - name: fulfillment_days
+        description: "Number of days between order purchase and handoff to carrier. Measures seller fulfilment speed."
+      - name: order_delivered_carrier_date
+        description: "Timestamp when the order was handed to the carrier."
+      - name: carrier_delivery_days
+        description: "Number of days between carrier handoff and delivery to customer. Measures carrier performance."
+      - name: order_delivered_customer_date
+        description: "Timestamp when the order was delivered to the customer."
+      - name: delivery_delay_days
+        description: "Difference in days between estimated and actual delivery date. Positive means late, negative means early. Null if order was not delivered."
+      - name: order_estimated_delivery_date
+        description: "Estimated delivery date communicated to the customer at purchase."
+      - name: customer_city
+        description: "City of the customer. Used for geographic delivery performance analysis."
+      - name: customer_state
+        description: "Brazilian state of the customer. Used for geographic delivery performance analysis."
