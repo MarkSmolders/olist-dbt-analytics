@@ -217,3 +217,29 @@ models:
         tests:
           - not_null
           - not_negative
+
+# -------------------------------------------------------
+# Mart model: dim_date
+# -------------------------------------------------------
+  - name: dim_date
+    description: "Date dimension table. One row per day covering 2015-01-01 to 2019-12-31. Generated using dbt_utils.date_spine. Date range is hardcoded to cover the Olist dataset (2016-2018) with one year buffer on each side. In production this would be derived dynamically."
+    columns:
+      - name: date_id
+        description: "The date itself. Primary key of this model."
+        tests:
+          - unique
+          - not_null
+      - name: year
+        description: "Calendar year extracted from the date."
+      - name: month
+        description: "Month number (1-12) extracted from the date."
+      - name: month_name
+        description: "Full month name (e.g. January, February)."
+      - name: quarter
+        description: "Quarter number (1-4) extracted from the date."
+      - name: day_of_week
+        description: "Day of week number using BigQuery convention where 1 = Sunday and 7 = Saturday."
+      - name: day_name
+        description: "Full day name (e.g. Monday, Tuesday)."
+      - name: is_weekend
+        description: "Boolean flag. True if the date falls on a Saturday or Sunday, false otherwise."
