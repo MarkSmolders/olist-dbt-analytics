@@ -121,7 +121,7 @@ models:
 # Analytical Mart: platform_performance
 # -------------------------------------------------------
   - name: platform_performance
-    description: "Analytical mart for platform-wide performance trends. One row per month. Contains aggregated revenue, order volume, and new customer acquisition metrics. Data covers September 2016 to August 2018. The first few months of 2016 have sparse data reflecting the platform launch period and should be treated with caution in trend analysis."
+    description: "Analytical mart for platform-wide performance trends. One row per month. Contains aggregated revenue, order volume, item sales, cancellations, and new customer acquisition. Data covers September 2016 to August 2018. The first few months of 2016 have sparse data reflecting the platform launch period and should be treated with caution in trend analysis."
     columns:
       - name: year
         description: "Calendar year of the aggregation period."
@@ -141,3 +141,7 @@ models:
         description: "Total number of distinct orders placed in this month."
       - name: new_customers
         description: "Number of customers placing their first order in this month. Null for months with no new customers."
+      - name: items_sold
+        description: "Total number of individual items sold in this month."
+      - name: cancelled_orders
+        description: "Total number of distinct orders with a cancelled status in this month."
