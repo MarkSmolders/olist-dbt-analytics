@@ -43,3 +43,34 @@ models:
         description: "City of the customer. Used for geographic delivery performance analysis."
       - name: customer_state
         description: "Brazilian state of the customer. Used for geographic delivery performance analysis."
+
+# -------------------------------------------------------
+# Analytical Mart: customer_behaviour
+# -------------------------------------------------------
+  - name: customer_behaviour
+    description: "Analytical mart for customer behaviour analysis. One row per unique physical customer identified by customer_unique_id. Contains lifetime value, purchase history, and activity metrics. Note that customer location is excluded as the same customer can have different locations across orders."
+    columns:
+      - name: customer_unique_id
+        description: "Unique identifier for the physical customer across all orders. Primary key of this model."
+        tests:
+          - unique
+          - not_null
+      - name: first_purchase_date
+        description: "Timestamp of the customer's first order."
+      - name: last_purchase_date
+        description: "Timestamp of the customer's most recent order."
+      - name: customer_lifetime_value
+        description: "Total amount spent by the customer across all orders in Brazilian Real (BRL)."
+        tests:
+          - not_null
+          - not_negative
+      - name: total_orders
+        description: "Total number of distinct orders placed by the customer."
+        tests:
+          - not_null
+      - name: average_order_value
+        description: "Average spend per order in Brazilian Real (BRL). Calculated as customer_lifetime_value divided by total_orders."
+        tests:
+          - not_null
+      - name: days_since_last_purchase
+        description: "Number of days between the customer's most recent order and today. Useful for identifying inactive or churned customers."
