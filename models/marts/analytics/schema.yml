@@ -74,3 +74,45 @@ models:
           - not_null
       - name: days_since_last_purchase
         description: "Number of days between the customer's most recent order and today. Useful for identifying inactive or churned customers."
+
+# -------------------------------------------------------
+# Analytical Mart: seller_performance
+# -------------------------------------------------------
+  - name: seller_performance
+    description: "Analytical mart for seller performance analysis. One row per seller. Contains aggregated commercial metrics including revenue, order volume, items sold, freight costs, and cancellation counts. Join to fct_order_reviews on order_id for review scores."
+    columns:
+      - name: seller_id
+        description: "Unique identifier for each seller. Primary key of this model."
+        tests:
+          - unique
+          - not_null
+      - name: seller_zip_code_prefix
+        description: "First five digits of the seller zip code."
+      - name: seller_city
+        description: "City where the seller is located."
+      - name: seller_state
+        description: "Brazilian state where the seller is located."
+      - name: total_orders
+        description: "Total number of distinct orders fulfilled by this seller."
+        tests:
+          - not_null
+          - not_negative
+      - name: total_payment_value
+        description: "Total payment value across all orders fulfilled by this seller in Brazilian Real (BRL)."
+        tests:
+          - not_null
+          - not_negative
+      - name: total_items_sold
+        description: "Total number of individual items sold by this seller."
+        tests:
+          - not_null
+          - not_negative
+      - name: average_freight_value
+        description: "Average freight cost per item for this seller in Brazilian Real (BRL)."
+        tests:
+          - not_negative
+      - name: cancelled_orders
+        description: "Total number of cancelled orders associated with this seller."
+        tests:
+          - not_null
+          - not_negative
