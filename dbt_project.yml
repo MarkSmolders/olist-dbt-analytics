@@ -9,3 +9,13 @@ model-paths: ["models"]
 target-path: "target"
 clean-targets:
   - "target"
+
+models:
+  olist_analytics:
+    staging:
+      +materialized: view
+    marts:
+      core:
+        +materialized: table
+      analytics:
+        +materialized: table
