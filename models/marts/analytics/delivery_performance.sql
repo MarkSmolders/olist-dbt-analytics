@@ -24,7 +24,7 @@ SELECT
     ORD.order_delivered_carrier_date,
     DATE_DIFF(ORD.order_delivered_customer_date, ORD.order_delivered_carrier_date, DAY) AS carrier_delivery_days,
     ORD.order_delivered_customer_date,
-    DATE_DIFF(ORD.order_estimated_delivery_date, ORD.order_delivered_customer_date, DAY) AS delivery_delay_days,
+    DATE_DIFF(ORD.order_delivered_customer_date, ORD.order_estimated_delivery_date, DAY) AS delivery_delay_days,
     ORD.order_estimated_delivery_date,
     CUS.customer_city,
     SEL.seller_city,
