@@ -1,0 +1,193 @@
+version: 2
+
+models:
+# -------------------------------------------------------
+# Analytical Mart: delivery_performance
+# -------------------------------------------------------
+  - name: delivery_performance
+    description: "Analytical mart for delivery performance analysis. One row per order. Contains calculated time differences across the order lifecycle to measure fulfilment speed, carrier delivery time, and delivery accuracy against estimates. Joined with customer location for geographic analysis."
+    columns:
+      - name: order_id
+        description: "Unique identifier for each order. Primary key of this model."
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Foreign key to dim_customers."
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+      - name: order_status
+        description: "Current status of the order."
+      - name: order_purchase_timestamp
+        description: "Timestamp when the order was placed."
+      - name: approval_time_minutes
+        description: "Time in minutes between order purchase and payment approval. Null if order was never approved."
+      - name: order_approved_at
+        description: "Timestamp when the payment was approved."
+      - name: fulfillment_days
+        description: "Number of days between order purchase and handoff to carrier. Measures seller fulfilment speed."
+      - name: order_delivered_carrier_date
+        description: "Timestamp when the order was handed to the carrier."
+      - name: carrier_delivery_days
+        description: "Number of days between carrier handoff and delivery to customer. Measures carrier performance."
+      - name: order_delivered_customer_date
+        description: "Timestamp when the order was delivered to the customer."
+      - name: delivery_delay_days
+        description: "Difference in days between estimated and actual delivery date. Positive means late, negative means early. Null if order was not delivered."
+      - name: order_estimated_delivery_date
+        description: "Estimated delivery date communicated to the customer at purchase."
+      - name: customer_city
+        description: "City of the customer. Used for geographic delivery performance analysis."
+      - name: customer_state
+        description: "Brazilian state of the customer. Used for geographic delivery performance analysis."
+
+# -------------------------------------------------------
+# Analytical Mart: customer_behaviour
+# -------------------------------------------------------
+  - name: customer_behaviour
+    description: "Analytical mart for customer behaviour analysis. One row per unique physical customer identified by customer_unique_id. Contains lifetime value, purchase history, and activity metrics. Note that customer location is excluded as the same customer can have different locations across orders."
+    columns:
+      - name: customer_unique_id
+        description: "Unique identifier for the physical customer across all orders. Primary key of this model."
+        tests:
+          - unique
+          - not_null
+      - name: first_purchase_date
+        description: "Timestamp of the customer's first order."
+      - name: last_purchase_date
+        description: "Timestamp of the customer's most recent order."
+      - name: customer_lifetime_value
+        description: "Total amount spent by the customer across all orders in Brazilian Real (BRL)."
+        tests:
+          - not_null
+          - not_negative
+      - name: total_orders
+        description: "Total number of distinct orders placed by the customer."
+        tests:
+          - not_null
+      - name: average_order_value
+        description: "Average spend per order in Brazilian Real (BRL). Calculated as customer_lifetime_value divided by total_orders."
+        tests:
+          - not_null
+      - name: days_since_last_purchase
+        description: "Number of days between the customer's most recent order and today. Useful for identifying inactive or churned customers."
+
+# -------------------------------------------------------
+# Analytical Mart: seller_performance
+# -------------------------------------------------------
+  - name: seller_performance
+    description: "Analytical mart for seller performance analysis. One row per seller. Contains aggregated commercial metrics including revenue, order volume, items sold, freight costs, and cancellation counts. Join to fct_order_reviews on order_id for review scores."
+    columns:
+      - name: seller_id
+        description: "Unique identifier for each seller. Primary key of this model."
+        tests:
+          - unique
+          - not_null
+      - name: seller_zip_code_prefix
+        description: "First five digits of the seller zip code."
+      - name: seller_city
+        description: "City where the seller is located."
+      - name: seller_state
+        description: "Brazilian state where the seller is located."
+      - name: total_orders
+        description: "Total number of distinct orders fulfilled by this seller."
+        tests:
+          - not_null
+          - not_negative
+      - name: total_payment_value
+        description: "Total payment value across all orders fulfilled by this seller in Brazilian Real (BRL)."
+        tests:
+          - not_null
+          - not_negative
+      - name: total_items_sold
+        description: "Total number of individual items sold by this seller."
+        tests:
+          - not_null
+          - not_negative
+      - name: average_freight_value
+        description: "Average freight cost per item for this seller in Brazilian Real (BRL)."
+        tests:
+          - not_negative
+      - name: cancelled_orders
+        description: "Total number of cancelled orders associated with this seller."
+        tests:
+          - not_null
+          - not_negative
+
+# -------------------------------------------------------
+# Analytical Mart: platform_performance
+# -------------------------------------------------------
+  - name: platform_performance
+    description: "Analytical mart for platform-wide performance trends. One row per month. Contains aggregated revenue, order volume, item sales, cancellations, and new customer acquisition. Data covers September 2016 to August 2018. The first few months of 2016 have sparse data reflecting the platform launch period and should be treated with caution in trend analysis."
+    columns:
+      - name: year
+        description: "Calendar year of the aggregation period."
+        tests:
+          - not_null
+      - name: month
+        description: "Month number (1-12) of the aggregation period."
+        tests:
+          - not_null
+      - name: month_name
+        description: "Full month name of the aggregation period."
+      - name: quarter
+        description: "Quarter number (1-4) of the aggregation period."
+      - name: total_revenue
+        description: "Total payment value across all orders placed in this month in Brazilian Real (BRL)."
+      - name: total_orders
+        description: "Total number of distinct orders placed in this month."
+      - name: new_customers
+        description: "Number of customers placing their first order in this month. Null for months with no new customers."
+      - name: items_sold
+        description: "Total number of individual items sold in this month."
+      - name: cancelled_orders
+        description: "Total number of distinct orders with a cancelled status in this month."
+
+# -------------------------------------------------------
+# Analytical Mart: product_performance
+# -------------------------------------------------------
+  - name: product_performance
+    description: "Analytical mart for product performance analysis. One row per product. Contains commercial metrics including revenue and order volume alongside customer satisfaction metrics from reviews. Product category names are in English via the translation table."
+    columns:
+      - name: product_id
+        description: "Unique identifier for each product. Primary key of this model."
+        tests:
+          - unique
+          - not_null
+      - name: product_category_name_english
+        description: "English product category name. Null for two categories missing from the translation table."
+      - name: product_name_length
+        description: "Character length of the product name."
+      - name: product_description_length
+        description: "Character length of the product description."
+      - name: product_photos_qty
+        description: "Number of product photos published by the seller."
+      - name: product_weight_g
+        description: "Product weight in grams."
+      - name: product_length_cm
+        description: "Product length in centimetres."
+      - name: product_height_cm
+        description: "Product height in centimetres."
+      - name: average_review_score
+        description: "Average customer review score for this product rounded to one decimal place. Null if no reviews exist."
+      - name: total_reviews
+        description: "Total number of customer reviews for this product."
+        tests:
+          - not_null
+          - not_negative
+      - name: total_revenue
+        description: "Total revenue generated by this product across all orders in Brazilian Real (BRL)."
+        tests:
+          - not_negative
+      - name: total_orders
+        description: "Total number of distinct orders containing this product."
+        tests:
+          - not_negative
+      - name: total_units_sold
+        description: "Total number of units of this product sold."
+        tests:
+          - not_null
+          - not_negative

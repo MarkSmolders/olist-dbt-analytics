@@ -1,0 +1,13 @@
+# Data
+data/raw/
+
+# Credentials
+*.json
+
+# Python
+__pycache__/
+*.pyc
+.env
+venv/
+env/
+dbt_internal_packages/
